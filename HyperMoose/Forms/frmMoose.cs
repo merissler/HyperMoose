@@ -1,4 +1,5 @@
-﻿using MooseCode;
+﻿using System.Runtime.InteropServices;
+using MooseCode;
 
 namespace HyperMoose.Forms;
 
@@ -17,6 +18,15 @@ public partial class frmMoose : Form
         int x = screen.Right - Width;
         int y = screen.Bottom - Height;
         Location = new Point(x, y);
+    }
+
+    private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
+    {
+        if (e.Button == MouseButtons.Left)
+        {
+            ReleaseCapture();
+            _ = SendMessage(Handle, WM_NCLBUTTONDOWN, HTCAPTION, 0);
+        }
     }
 
     private void label1_SizeChanged(object sender, EventArgs e)
@@ -41,4 +51,13 @@ public partial class frmMoose : Form
     {
         Close();
     }
+
+    private const int WM_NCLBUTTONDOWN = 0xA1;
+    private const int HTCAPTION = 0x2;
+
+    [DllImport("user32.dll")]
+    private static extern bool ReleaseCapture();
+
+    [DllImport("user32.dll")]
+    private static extern int SendMessage(IntPtr hWnd, int msg, int wParam, int lParam);
 }
