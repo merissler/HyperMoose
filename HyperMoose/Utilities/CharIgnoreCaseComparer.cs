@@ -1,4 +1,4 @@
-﻿namespace HyperMoose;
+﻿namespace HyperMoose.Utilities;
 
 internal sealed class CharIgnoreCaseComparer : IEqualityComparer<char>
 {

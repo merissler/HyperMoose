@@ -1,7 +1,6 @@
-﻿using System.Net;
-using System.Reflection;
+﻿using System.Reflection;
 
-namespace HyperMoose;
+namespace HyperMoose.Utilities;
 
 internal static class FileHelper
 {
@@ -12,7 +11,6 @@ internal static class FileHelper
 
         if (File.Exists(file))
         {
-            var friends = GetSavedFriends().ToDictionary(m => m.IPAddress);
             var groups = new List<Herd>();
 
             foreach (string line in File.ReadLines(file))
@@ -30,48 +28,29 @@ internal static class FileHelper
                     string[] members = value[membersStart..].Split(',', options);
 
                     var herd = new Herd(name);
-                    var ips = members.Select(IPAddress.Parse);
-
-                    foreach (var ip in ips)
+                    foreach (string host in members)
                     {
-                        var moose = friends.GetValueOrDefault(ip, new Moose(ip));
+                        var moose = new Moose(host);
                         herd.Add(moose);
                     }
                     groups.Add(herd);
                 }
             }
-            return [.. groups];
-        }
-        else return [];
-    }
+            var individuals = groups
+                .Where(herd => herd.Count == 1)
+                .ToDictionary(herd => herd[0].Hostname, herd => herd.Name);
 
-    public static Moose[] GetSavedFriends()
-    {
-        string directory = GetDataDirectory();
-        string file = Path.Combine(directory, "friends.ini");
-
-        if (File.Exists(file))
-        {
-            var friends = new List<Moose>();
-
-            foreach (string line in File.ReadLines(file))
+            foreach (var herd in groups)
             {
-                int valueEnd = line.IndexOf('#');
-                string value = valueEnd >= 0 ? line[..valueEnd] : line;
-
-                if (!string.IsNullOrWhiteSpace(value))
+                foreach (var moose in herd)
                 {
-                    var options = StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries;
-                    string[] tokens = line.Split(':', options);
-
-                    string name = tokens[0].ToUpperInvariant();
-                    var ip = IPAddress.Parse(tokens[1]);
-
-                    var moose = new Moose(name, ip);
-                    friends.Add(moose);
+                    if (individuals.TryGetValue(moose.Hostname, out string? name))
+                    {
+                        moose.Name = name;
+                    }
                 }
             }
-            return [.. friends];
+            return [.. groups];
         }
         else return [];
     }

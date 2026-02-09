@@ -1,21 +1,19 @@
-﻿using System.Net;
-
-namespace HyperMoose;
+﻿namespace HyperMoose;
 
 internal class Moose
 {
     public string Name { get; set; }
-    public IPAddress IPAddress { get; }
+    public string Hostname { get; }
 
-    public Moose(IPAddress ip)
+    public Moose(string host)
     {
-        Name = ip.ToString();
-        IPAddress = ip;
+        Name = host;
+        Hostname = host;
     }
 
-    public Moose(string name, IPAddress ip)
+    public Moose(string name, string host)
     {
         Name = name;
-        IPAddress = ip;
+        Hostname = host;
     }
 }

@@ -1,6 +1,6 @@
 ﻿using MooseCode;
 
-namespace HyperMoose;
+namespace HyperMoose.Forms;
 
 public partial class frmMoose : Form
 {

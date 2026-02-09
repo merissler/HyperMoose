@@ -1,4 +1,4 @@
-﻿namespace HyperMoose
+﻿namespace HyperMoose.Forms
 {
     partial class frmMoose
     {

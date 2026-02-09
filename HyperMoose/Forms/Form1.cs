@@ -1,8 +1,8 @@
 using System.Diagnostics;
-using System.Net.Sockets;
+using HyperMoose.Utilities;
 using MooseCode;
 
-namespace HyperMoose;
+namespace HyperMoose.Forms;
 
 public partial class Form1 : Form
 {
@@ -18,19 +18,14 @@ public partial class Form1 : Form
 
     private void Form1_Activated(object sender, EventArgs e)
     {
-        listBox1.DataSource = GetAllChats();
+        listBox1.DataSource = FileHelper.GetSavedGroups();
         listBox1.ValueMember = nameof(Herd.Name);
         listBox1.DisplayMember = nameof(Herd.Name);
     }
 
-    private void btnSocietyEdit_Click(object sender, EventArgs e)
-    {
-        EditDataFile("groups.ini");
-    }
-
     private void btnFriendEdit_Click(object sender, EventArgs e)
     {
-        EditDataFile("friends.ini");
+        EditDataFile("groups.ini");
     }
 
     private async void textBox1_KeyPress(object sender, KeyPressEventArgs e)
@@ -78,14 +73,13 @@ public partial class Form1 : Form
             {
                 try
                 {
-                    listBox2.Items.Add($"Messaging {moose.IPAddress}");
+                    listBox2.Items.Add($"Messaging {moose.Hostname}");
 
-                    using var client = new TcpClient(moose.IPAddress.ToString(), Program.PORT);
-                    using var stream = client.GetStream();
-                    using var writer = new StreamWriter(stream) { AutoFlush = true };
+                    using var connection = new MooseConnection();
+                    await connection.OpenAsync(moose.Hostname, Program.PORT);
 
                     string encoded = _translator.Encode(message);
-                    await writer.WriteLineAsync(encoded);
+                    await connection.SendMessageAsync(encoded);
                 }
                 catch (Exception ex)
                 {
@@ -96,35 +90,11 @@ public partial class Form1 : Form
         }
         finally
         {
+            textBox1.Clear();
             textBox1.Enabled = true;
             btnSpeech.Enabled = true;
             Cursor = Cursors.Default;
         }
-    }
-
-    private static Herd[] GetAllChats()
-    {
-        var chats = new Dictionary<int, Herd>();
-
-        var groups = FileHelper.GetSavedGroups();
-        var friends = FileHelper.GetSavedFriends();
-
-        foreach (var herd in groups)
-        {
-            var hashes = herd.Select(moose => moose.IPAddress.GetHashCode());
-            int key = HashCode.Combine(hashes);
-            chats[key] = herd;
-        }
-        foreach (var moose in friends)
-        {
-            int key = moose.IPAddress.GetHashCode();
-            chats[key] = new Herd(moose.Name, [moose]);
-        }
-
-        var ordered = chats.Values
-            .OrderByDescending(herd => herd.Count)
-            .ThenBy(herd => herd.Name);
-        return [.. ordered];
     }
 
     private static void EditDataFile(string name)
