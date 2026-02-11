@@ -1,18 +1,23 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.Diagnostics;
+using System.Runtime.InteropServices;
 using MooseCode;
 
 namespace HyperMoose.Forms;
 
 public partial class frmMoose : Form
 {
+    private readonly bool _scuba;
     private bool _translated = false;
 
     public frmMoose(string sender, string message)
     {
         InitializeComponent();
+        _scuba = Process.GetProcessesByName("DesktopAquarium").Length > 0;
 
         label2.Text = sender;
         label1.Text = message;
+
+        pictureBox1.Image = _scuba ? Properties.Resources.moose_scuba : Properties.Resources.moose;
 
         var screen = Screen.PrimaryScreen!.WorkingArea;
         int x = screen.Right - Width;
@@ -31,7 +36,8 @@ public partial class frmMoose : Form
 
     private void label1_SizeChanged(object sender, EventArgs e)
     {
-        int min = 380 - label2.Width;
+        int right = _scuba ? 360 : 380;
+        int min = right - label2.Width;
         int left = Math.Min(Right - label1.Width, min);
         label2.Left = left;
         label1.Left = left;

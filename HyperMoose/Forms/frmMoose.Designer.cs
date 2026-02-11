@@ -39,7 +39,7 @@
             // pictureBox1
             // 
             pictureBox1.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
+            pictureBox1.Image = Properties.Resources.moose;
             pictureBox1.Location = new Point(314, 0);
             pictureBox1.Name = "pictureBox1";
             pictureBox1.Size = new Size(512, 495);
