@@ -38,10 +38,10 @@ public partial class frmMoose : Form
     {
         int right = _scuba ? 360 : 380;
         int min = right - label2.Width;
-        int left = Math.Min(Right - label1.Width, min);
+        int left = Math.Min(Width - label1.Width, min);
         label2.Left = left;
         label1.Left = left;
-        label1.MaximumSize = new Size(Right - label1.Left, label1.MaximumSize.Height);
+        label1.MaximumSize = new Size(Width - label1.Left, label1.MaximumSize.Height);
     }
 
     private void label1_DoubleClick(object sender, EventArgs e)
