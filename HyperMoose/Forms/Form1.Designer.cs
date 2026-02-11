@@ -57,8 +57,8 @@
             // splitContainer1.Panel2
             // 
             splitContainer1.Panel2.Controls.Add(tableLayoutPanel1);
-            splitContainer1.Size = new Size(1138, 466);
-            splitContainer1.SplitterDistance = 458;
+            splitContainer1.Size = new Size(768, 285);
+            splitContainer1.SplitterDistance = 276;
             splitContainer1.TabIndex = 0;
             // 
             // listBox1
@@ -68,7 +68,7 @@
             listBox1.IntegralHeight = false;
             listBox1.Location = new Point(3, 3);
             listBox1.Name = "listBox1";
-            listBox1.Size = new Size(452, 460);
+            listBox1.Size = new Size(270, 279);
             listBox1.TabIndex = 0;
             // 
             // tableLayoutPanel1
@@ -88,7 +88,7 @@
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            tableLayoutPanel1.Size = new Size(676, 466);
+            tableLayoutPanel1.Size = new Size(488, 285);
             tableLayoutPanel1.TabIndex = 2;
             // 
             // textBox1
@@ -97,14 +97,14 @@
             textBox1.CharacterCasing = CharacterCasing.Upper;
             textBox1.Location = new Point(3, 42);
             textBox1.Name = "textBox1";
-            textBox1.Size = new Size(567, 30);
+            textBox1.Size = new Size(379, 30);
             textBox1.TabIndex = 1;
             textBox1.TextChanged += textBox1_TextChanged;
             textBox1.KeyPress += textBox1_KeyPress;
             // 
             // btnSpeech
             // 
-            btnSpeech.Location = new Point(576, 42);
+            btnSpeech.Location = new Point(388, 42);
             btnSpeech.Name = "btnSpeech";
             btnSpeech.Size = new Size(97, 33);
             btnSpeech.TabIndex = 2;
@@ -130,14 +130,14 @@
             listBox2.IntegralHeight = false;
             listBox2.Location = new Point(3, 81);
             listBox2.Name = "listBox2";
-            listBox2.Size = new Size(670, 382);
+            listBox2.Size = new Size(482, 201);
             listBox2.TabIndex = 5;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(10F, 23F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1164, 492);
+            ClientSize = new Size(794, 311);
             Controls.Add(splitContainer1);
             Font = new Font("Comic Sans MS", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
             Icon = (Icon)resources.GetObject("$this.Icon");

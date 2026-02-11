@@ -41,6 +41,7 @@ public partial class frmMoose : Form
         int left = Math.Min(Right - label1.Width, min);
         label2.Left = left;
         label1.Left = left;
+        label1.MaximumSize = new Size(Right - label1.Left, label1.MaximumSize.Height);
     }
 
     private void label1_DoubleClick(object sender, EventArgs e)

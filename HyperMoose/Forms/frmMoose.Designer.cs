@@ -64,6 +64,7 @@
             // 
             // label1
             // 
+            label1.AutoEllipsis = true;
             label1.AutoSize = true;
             label1.BackColor = Color.White;
             label1.BorderStyle = BorderStyle.FixedSingle;

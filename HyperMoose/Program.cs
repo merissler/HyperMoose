@@ -24,6 +24,8 @@ internal static class Program
         private readonly TcpListener _listener;
         private readonly NotifyIcon _notifyIcon;
 
+        private Form1? _form;
+
         public TrayAppContext()
         {
             _cts = new();
@@ -36,26 +38,35 @@ internal static class Program
             _ = ListenAsync(_cts.Token);
 
             var menu = new ContextMenuStrip();
-            menu.Items.Add("ALIVE", null, OnOpen);
-            menu.Items.Add("DEATH", null, OnExit);
+            menu.Items.Add("ALIVE", null, OpenMainForm);
+            menu.Items.Add("DEATH", null, ExitApplication);
 
             _notifyIcon = new()
             {
                 Icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath),
                 ContextMenuStrip = menu,
-                Text = nameof(HyperMoose),
+                Text = "HYPER MOOSE",
                 Visible = true,
             };
-            _notifyIcon.DoubleClick += OnOpen;
+            _notifyIcon.DoubleClick += OpenMainForm;
         }
 
-        private void OnOpen(object? sender, EventArgs e)
+        private void OpenMainForm(object? sender, EventArgs e)
         {
-            var form = new Form1();
-            form.Show();
+            if (_form is null)
+            {
+                _ui.BeginInvoke(() =>
+                {
+                    _form = new Form1();
+                    _form.ShowDialog();
+                    _form.Dispose();
+                    _form = null;
+                });
+            }
+            else _form.Activate();
         }
 
-        private void OnExit(object? sender, EventArgs e)
+        private void ExitApplication(object? sender, EventArgs e)
         {
             _cts.Cancel();
             _listener.Stop();
