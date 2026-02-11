@@ -108,7 +108,7 @@ public partial class Form1 : Form
             {
                 Directory.CreateDirectory(directory);
             }
-            string contents = FileHelper.GetEmbeddedText(name);
+            string contents = FileHelper.GetEmbeddedResource(name);
             File.WriteAllText(file, contents);
         }
         Process.Start(new ProcessStartInfo()

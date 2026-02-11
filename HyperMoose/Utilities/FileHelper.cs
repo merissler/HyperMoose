@@ -61,10 +61,10 @@ internal static class FileHelper
         return Path.Combine(localAppData, "HyperMoose");
     }
 
-    public static string GetEmbeddedText(string name)
+    public static string GetEmbeddedResource(string name)
     {
         var assembly = Assembly.GetExecutingAssembly();
-        string qualifiedName = $"{nameof(HyperMoose)}.{name}";
+        string qualifiedName = $"{nameof(HyperMoose)}.Resources.{name}";
 
         using var stream = assembly.GetManifestResourceStream(qualifiedName);
         if (stream is not null)
