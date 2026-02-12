@@ -1,4 +1,7 @@
 using System.Diagnostics;
+using System.Drawing.Text;
+using System.Xml.Linq;
+using HyperMoose.Models;
 using HyperMoose.Utilities;
 using MooseCode;
 
@@ -9,32 +12,103 @@ public partial class Form1 : Form
     private readonly MooseTranslator _translator;
     private readonly HashSet<char> _validCharacters;
 
+    private bool _loading = false;
+    private string? _selection;
+
     public Form1()
     {
         _translator = new();
         _validCharacters = new(_translator.GetValidCharacters(), new CharIgnoreCaseComparer());
+
         InitializeComponent();
+        numericUpDown1.Value = Program.PORT;
+
+        var fonts = new InstalledFontCollection();
+        var usable = fonts.Families
+            .Where(f => f.IsStyleAvailable(FontStyle.Regular))
+            .Select(f => f.Name)
+            .OrderBy(name => name);
+
+        foreach (string font in usable)
+        {
+            comboBox1.Items.Add(font);
+        }
+        comboBox1.SelectedItem = Font.Name;
     }
 
     private void Form1_Activated(object sender, EventArgs e)
     {
-        listBox1.DataSource = FileHelper.GetSavedGroups();
-        listBox1.ValueMember = nameof(Herd.Name);
-        listBox1.DisplayMember = nameof(Herd.Name);
+        try
+        {
+            _loading = true;
+
+            var groups = FileHelper.GetSavedGroups();
+            listBox1.DataSource = groups;
+            listBox1.ValueMember = nameof(Herd.Name);
+            listBox1.DisplayMember = nameof(Herd.Name);
+            listBox1.SelectedIndex = Array.FindIndex(groups, herd => herd.Name == _selection);
+        }
+        finally
+        {
+            _loading = false;
+        }
+    }
+
+    private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        if (!_loading)
+        {
+            if (listBox1.SelectedItem is Herd herd)
+            {
+                _selection = herd.Name;
+            }
+        }
     }
 
     private void btnFriendEdit_Click(object sender, EventArgs e)
     {
-        EditDataFile("groups.ini");
+        string directory = FileHelper.GetDataDirectory();
+        string file = Path.Combine(directory, "groups.ini");
+
+        if (!File.Exists(file))
+        {
+            if (!Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+            string contents = Properties.Resources.groups_ini;
+            File.WriteAllText(file, contents);
+        }
+        Process.Start(new ProcessStartInfo()
+        {
+            FileName = file,
+            WorkingDirectory = directory,
+            UseShellExecute = true,
+        });
+    }
+
+    private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        if (comboBox1.SelectedItem is string font)
+        {
+            try
+            {
+                comboBox1.Font = FontHelper.ReplaceFontFamily(comboBox1.Font, font);
+                textBox1.Font = FontHelper.ReplaceFontFamily(textBox1.Font, font);
+            }
+            catch { }
+        }
     }
 
     private async void textBox1_KeyPress(object sender, KeyPressEventArgs e)
     {
         if (e.KeyChar == '\r')
         {
+            string message = textBox1.Text;
             var herd = listBox1.SelectedItem as Herd;
-            await BroadcastAsync(textBox1.Text, herd!);
+            int port = Convert.ToInt32(numericUpDown1.Value);
 
+            await BroadcastAsync(textBox1.Text, herd!, port);
             e.Handled = true;
         }
         else if (!char.IsControl(e.KeyChar) && !_validCharacters.Contains(e.KeyChar))
@@ -55,11 +129,14 @@ public partial class Form1 : Form
 
     private async void btnSpeech_Click(object sender, EventArgs e)
     {
+        string message = textBox1.Text;
         var herd = listBox1.SelectedItem as Herd;
-        await BroadcastAsync(textBox1.Text, herd!);
+        int port = Convert.ToInt32(numericUpDown1.Value);
+
+        await BroadcastAsync(textBox1.Text, herd!, port);
     }
 
-    private async Task BroadcastAsync(string message, Herd herd)
+    private async Task BroadcastAsync(string message, Herd herd, int port)
     {
         try
         {
@@ -79,7 +156,10 @@ public partial class Form1 : Form
                     await connection.OpenAsync(moose.Hostname, Program.PORT);
 
                     string encoded = _translator.Encode(message);
-                    await connection.SendMessageAsync(encoded);
+                    string? font = comboBox1.SelectedItem as string;
+                    var mm = new MooseMessage(encoded, font);
+
+                    await connection.SendMessageAsync(mm);
                 }
                 catch (Exception ex)
                 {
@@ -95,27 +175,5 @@ public partial class Form1 : Form
             btnSpeech.Enabled = true;
             Cursor = Cursors.Default;
         }
-    }
-
-    private static void EditDataFile(string name)
-    {
-        string directory = FileHelper.GetDataDirectory();
-        string file = Path.Combine(directory, name);
-
-        if (!File.Exists(file))
-        {
-            if (!Directory.Exists(directory))
-            {
-                Directory.CreateDirectory(directory);
-            }
-            string contents = FileHelper.GetEmbeddedResource(name);
-            File.WriteAllText(file, contents);
-        }
-        Process.Start(new ProcessStartInfo()
-        {
-            FileName = file,
-            WorkingDirectory = directory,
-            UseShellExecute = true,
-        });
     }
 }

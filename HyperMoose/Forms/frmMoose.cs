@@ -1,23 +1,35 @@
 ﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
+using HyperMoose.Utilities;
 using MooseCode;
 
 namespace HyperMoose.Forms;
 
 public partial class frmMoose : Form
 {
+    private readonly MooseTranslator _translator;
     private readonly bool _scuba;
+
     private bool _translated = false;
 
-    public frmMoose(string sender, string message)
+    public frmMoose(MooseTranslator translator, string sender, string message, string? font = null)
     {
         InitializeComponent();
-        _scuba = Process.GetProcessesByName("DesktopAquarium").Length > 0;
 
+        _translator = translator;
+        _scuba = Process.GetProcessesByName("DesktopAquarium").Length > 0;
+        pictureBox1.Image = _scuba ? Properties.Resources.moose_scuba : Properties.Resources.moose;
+
+        if (!string.IsNullOrWhiteSpace(font))
+        {
+            try
+            {
+                Font = FontHelper.ReplaceFontFamily(Font, font);
+            }
+            catch { }
+        }
         label2.Text = sender;
         label1.Text = message;
-
-        pictureBox1.Image = _scuba ? Properties.Resources.moose_scuba : Properties.Resources.moose;
 
         var screen = Screen.PrimaryScreen!.WorkingArea;
         int x = screen.Right - Width;
@@ -48,8 +60,7 @@ public partial class frmMoose : Form
     {
         if (!_translated)
         {
-            var translator = new MooseTranslator();
-            label1.Text = translator.Decode(label1.Text);
+            label1.Text = _translator.Decode(label1.Text);
             _translated = true;
         }
     }

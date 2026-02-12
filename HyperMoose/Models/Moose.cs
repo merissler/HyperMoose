@@ -1,4 +1,4 @@
-﻿namespace HyperMoose;
+﻿namespace HyperMoose.Models;
 
 internal class Moose
 {

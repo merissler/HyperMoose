@@ -61,6 +61,39 @@ namespace HyperMoose.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to # This file stores the user&apos;s groups. Any content following a &apos;#&apos; is ignored.
+        ///# 
+        ///# Use the following examples for reference:
+        ///# 
+        ///# EXAMPLE GROUP: 192.168.1.42, 192.168.2.44
+        ///# UNIVERSALLY DUMBFOUNDED HYPER-SPUDS: 192.168.0.15, 192.168.2.44, 192.168.10.101, 192.168.50.8
+        ///.
+        /// </summary>
+        internal static string groups_ini {
+            get {
+                return ResourceManager.GetString("groups_ini", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        /// </summary>
+        internal static System.IO.UnmanagedMemoryStream mmmh {
+            get {
+                return ResourceManager.GetStream("mmmh", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        /// </summary>
+        internal static System.IO.UnmanagedMemoryStream mmmuuhh {
+            get {
+                return ResourceManager.GetStream("mmmuuhh", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap moose {
@@ -77,6 +110,114 @@ namespace HyperMoose.Properties {
             get {
                 object obj = ResourceManager.GetObject("moose-scuba", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        /// </summary>
+        internal static System.IO.UnmanagedMemoryStream MUuah {
+            get {
+                return ResourceManager.GetStream("MUuah", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        /// </summary>
+        internal static System.IO.UnmanagedMemoryStream MUUuaaAaah {
+            get {
+                return ResourceManager.GetStream("MUUuaaAaah", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        /// </summary>
+        internal static System.IO.UnmanagedMemoryStream MUUUAAAH {
+            get {
+                return ResourceManager.GetStream("MUUUAAAH", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        /// </summary>
+        internal static System.IO.UnmanagedMemoryStream MUUUAAH {
+            get {
+                return ResourceManager.GetStream("MUUUAAH", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        /// </summary>
+        internal static System.IO.UnmanagedMemoryStream muUUUuaah {
+            get {
+                return ResourceManager.GetStream("muUUUuaah", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        /// </summary>
+        internal static System.IO.UnmanagedMemoryStream stomp_1 {
+            get {
+                return ResourceManager.GetStream("stomp_1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        /// </summary>
+        internal static System.IO.UnmanagedMemoryStream stomp_2 {
+            get {
+                return ResourceManager.GetStream("stomp_2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        /// </summary>
+        internal static System.IO.UnmanagedMemoryStream stomp_3 {
+            get {
+                return ResourceManager.GetStream("stomp_3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        /// </summary>
+        internal static System.IO.UnmanagedMemoryStream stomp_4 {
+            get {
+                return ResourceManager.GetStream("stomp_4", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        /// </summary>
+        internal static System.IO.UnmanagedMemoryStream stomp_5 {
+            get {
+                return ResourceManager.GetStream("stomp_5", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        /// </summary>
+        internal static System.IO.UnmanagedMemoryStream stomp_6 {
+            get {
+                return ResourceManager.GetStream("stomp_6", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        /// </summary>
+        internal static System.IO.UnmanagedMemoryStream stomp_7 {
+            get {
+                return ResourceManager.GetStream("stomp_7", resourceCulture);
             }
         }
     }

@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using HyperMoose.Models;
 
 namespace HyperMoose.Utilities;
 
@@ -59,19 +60,5 @@ internal static class FileHelper
     {
         string localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
         return Path.Combine(localAppData, "HyperMoose");
-    }
-
-    public static string GetEmbeddedResource(string name)
-    {
-        var assembly = Assembly.GetExecutingAssembly();
-        string qualifiedName = $"{nameof(HyperMoose)}.Resources.{name}";
-
-        using var stream = assembly.GetManifestResourceStream(qualifiedName);
-        if (stream is not null)
-        {
-            using var reader = new StreamReader(stream);
-            return reader.ReadToEnd();
-        }
-        else throw new Exception($"Resource not found: '{qualifiedName}'");
     }
 }

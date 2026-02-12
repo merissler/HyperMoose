@@ -85,7 +85,7 @@ public class MooseTranslator
         return builder.ToString();
     }
 
-    private static IEnumerable<string> EnumerateTokens(string value)
+    public static IEnumerable<string> EnumerateTokens(string value)
     {
         if (!string.IsNullOrWhiteSpace(value))
         {

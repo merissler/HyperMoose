@@ -53,13 +53,13 @@
             label2.AutoSize = true;
             label2.BackColor = Color.White;
             label2.BorderStyle = BorderStyle.FixedSingle;
-            label2.Location = new Point(10, 203);
+            label2.Location = new Point(10, 206);
             label2.Margin = new Padding(3);
             label2.Name = "label2";
             label2.Padding = new Padding(12);
-            label2.Size = new Size(155, 49);
+            label2.Size = new Size(192, 49);
             label2.TabIndex = 2;
-            label2.Text = "Leeeroy Jenkins";
+            label2.Text = "LEEEROY JENKINS";
             label2.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // label1

@@ -1,4 +1,5 @@
 ﻿using System.Net.Sockets;
+using HyperMoose.Models;
 
 namespace HyperMoose.Utilities;
 
@@ -29,16 +30,26 @@ internal class MooseConnection : IDisposable
         _stream = _client.GetStream();
     }
 
-    public Task SendMessageAsync(string message, CancellationToken cancellationToken = default)
+    public Task SendMessageAsync(MooseMessage message, CancellationToken cancellationToken = default)
     {
-        _writer ??= new StreamWriter(_stream!) { AutoFlush = true };
-        return _writer.WriteLineAsync(message.AsMemory(), cancellationToken);
+        if (message.Serialize() is string value)
+        {
+            _writer ??= new StreamWriter(_stream!) { AutoFlush = true };
+            return _writer.WriteLineAsync(value.AsMemory(), cancellationToken);
+        }
+        else throw new FormatException($"Message was an invalid format: '{message.MooseCode}'");
     }
 
-    public ValueTask<string?> ReadMessageAsync(CancellationToken cancellationToken = default)
+    public async Task<MooseMessage?> ReadMessageAsync(CancellationToken cancellationToken = default)
     {
         _reader ??= new StreamReader(_stream!);
-        return _reader.ReadLineAsync(cancellationToken);
+        string? value = await _reader.ReadLineAsync(cancellationToken);
+
+        if (!string.IsNullOrWhiteSpace(value))
+        {
+            return MooseMessage.Deserialize(value);
+        }
+        else return null;
     }
 
     public void Dispose()
