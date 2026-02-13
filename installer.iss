@@ -1,6 +1,6 @@
 [Setup]
 AppName=HyperMoose
-AppVersion=2.0
+AppVersion=2.1
 AppPublisher=Miles Rissler
 DefaultDirName={autopf}\HyperMoose
 DefaultGroupName=HyperMoose

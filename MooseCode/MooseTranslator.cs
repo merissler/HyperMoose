@@ -64,7 +64,7 @@ public class MooseTranslator
     public string Decode(string value)
     {
         var builder = new StringBuilder();
-        var tokens = EnumerateTokens(value);
+        var tokens = EnumerateCharacters(value);
 
         foreach (string encoded in tokens)
         {
@@ -85,7 +85,10 @@ public class MooseTranslator
         return builder.ToString();
     }
 
-    public static IEnumerable<string> EnumerateTokens(string value)
+    /// <summary>
+    /// Enumerates encoded moose characters separated by whitespace.
+    /// </summary>
+    public static IEnumerable<string> EnumerateCharacters(string value)
     {
         if (!string.IsNullOrWhiteSpace(value))
         {
@@ -111,6 +114,33 @@ public class MooseTranslator
             {
                 string token = builder.ToString();
                 yield return token;
+            }
+        }
+        else yield break;
+    }
+
+    /// <summary>
+    /// Enumerates individual moose elements within an encoded character.
+    /// </summary>
+    public static IEnumerable<string> EnumerateElements(string value)
+    {
+        if (!string.IsNullOrWhiteSpace(value))
+        {
+            int index = 0;
+
+            while (index < value.Length)
+            {
+                if (value.AsSpan(index).StartsWith(stomp))
+                {
+                    yield return stomp;
+                    index += stomp.Length;
+                }
+                else if (value.AsSpan(index).StartsWith(MUUUAAAH))
+                {
+                    yield return MUUUAAAH;
+                    index += MUUUAAAH.Length;
+                }
+                else index++;
             }
         }
         else yield break;

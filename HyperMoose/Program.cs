@@ -2,19 +2,28 @@ using System.Diagnostics;
 using System.Media;
 using System.Net;
 using System.Net.Sockets;
+using System.Runtime.InteropServices;
 using HyperMoose.Forms;
 using HyperMoose.Utilities;
 using MooseCode;
 
 namespace HyperMoose;
 
-internal static class Program
+internal static partial class Program
 {
     public const int PORT = 7777;
+
+#if DEBUG
+    [LibraryImport("kernel32.dll")] [return: MarshalAs(UnmanagedType.Bool)]
+    private static partial bool AllocConsole();
+#endif
 
     [STAThread]
     private static void Main()
     {
+#if DEBUG
+        AllocConsole();
+#endif
         ApplicationConfiguration.Initialize();
         Application.Run(new TrayAppContext());
     }
@@ -49,6 +58,8 @@ internal static class Program
 
             _listener = new(IPAddress.Any, PORT);
             _listener.Start();
+
+            Console.WriteLine($"Listening on port {PORT}...");
             _ = ListenAsync(_appCTS.Token);
 
             var menu = new ContextMenuStrip();
@@ -67,6 +78,8 @@ internal static class Program
 
         private void OpenMainForm(object? sender, EventArgs e)
         {
+            Console.WriteLine($"Opening main form...");
+
             if (_form is null)
             {
                 _ui.BeginInvoke(() =>
@@ -82,6 +95,8 @@ internal static class Program
 
         private void ExitApplication(object? sender, EventArgs e)
         {
+            Console.WriteLine($"Exiting application...");
+
             _appCTS.Cancel();
             _listener.Stop();
 
@@ -102,6 +117,10 @@ internal static class Program
 
         private async Task HandleClientAsync(TcpClient client, CancellationToken cancellationToken)
         {
+            var endpoint = client.Client.RemoteEndPoint as IPEndPoint;
+            string ip = endpoint is not null ? endpoint.Address.ToString() : "Anonymous";
+
+            Console.WriteLine($"Received TCP client: {ip}");
             using var connection = new MooseConnection(client);
 
             while (!cancellationToken.IsCancellationRequested)
@@ -110,13 +129,8 @@ internal static class Program
 
                 if (mm is not null && !string.IsNullOrWhiteSpace(mm.MooseCode))
                 {
-                    string sender;
-
-                    if (client.Client.RemoteEndPoint is IPEndPoint endpoint)
-                    {
-                        sender = await GetNameAsync(endpoint, cancellationToken);
-                    }
-                    else sender = "Anonymous";
+                    string sender = endpoint is not null ? await GetNameAsync(endpoint, cancellationToken) : ip;
+                    Console.WriteLine($"Received message from: {sender}");
 
                     _ui.BeginInvoke(() =>
                     {
@@ -128,18 +142,21 @@ internal static class Program
                 }
                 else break;
             }
+            Console.WriteLine($"Lost TCP client: {ip}");
         }
 
         private async Task PlayMooseSoundsAsync(string mooseCode)
         {
             try
             {
+                Console.WriteLine("Playing moose sounds...");
+
                 var old = Interlocked.Exchange(ref _soundCTS, new());
                 old?.Cancel();
                 old?.Dispose();
                 var cancellationToken = _soundCTS.Token;
 
-                foreach (string token in MooseTranslator.EnumerateTokens(mooseCode))
+                foreach (string token in MooseTranslator.EnumerateElements(mooseCode))
                 {
                     const string stomp = MooseTranslator.stomp;
                     const string MUUUAAAH = MooseTranslator.MUUUAAAH;
@@ -164,14 +181,15 @@ internal static class Program
                         {
                             cancellationToken.ThrowIfCancellationRequested();
 
-                            int delay = _random.Next(1000);
-                            await Task.Delay(delay, cancellationToken);
-
                             if (stream.CanSeek) stream.Position = 0;
                             using var sound = new SoundPlayer(stream);
                             using var registration = cancellationToken.Register(sound.Stop);
 
+                            //var stopwatch = Stopwatch.StartNew();
                             await Task.Run(sound.PlaySync, cancellationToken);
+
+                            //int remaining = 500 - (int)stopwatch.ElapsedMilliseconds;
+                            //if (remaining > 0) await Task.Delay(remaining, cancellationToken);
                         }
                     }
                     catch { cancellationToken.ThrowIfCancellationRequested(); }
