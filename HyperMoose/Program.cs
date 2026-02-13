@@ -134,7 +134,7 @@ internal static partial class Program
 
                     _ui.BeginInvoke(() =>
                     {
-                        var frm = new frmMoose(_translator, sender, mm.MooseCode, mm.FontFamily);
+                        var frm = new frmMoose(_translator, sender, mm.MooseCode, mm.FontFamily, _soundCTS);
                         frm.Show();
                         frm.FormClosed += (s, e) => frm.Dispose();
                     });
@@ -185,11 +185,7 @@ internal static partial class Program
                             using var sound = new SoundPlayer(stream);
                             using var registration = cancellationToken.Register(sound.Stop);
 
-                            //var stopwatch = Stopwatch.StartNew();
                             await Task.Run(sound.PlaySync, cancellationToken);
-
-                            //int remaining = 500 - (int)stopwatch.ElapsedMilliseconds;
-                            //if (remaining > 0) await Task.Delay(remaining, cancellationToken);
                         }
                     }
                     catch { cancellationToken.ThrowIfCancellationRequested(); }

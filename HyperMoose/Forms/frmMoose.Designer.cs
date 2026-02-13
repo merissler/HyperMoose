@@ -33,7 +33,10 @@
             label2 = new Label();
             label1 = new Label();
             button1 = new Button();
+            button2 = new Button();
+            flowLayoutPanel1 = new FlowLayoutPanel();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
+            flowLayoutPanel1.SuspendLayout();
             SuspendLayout();
             // 
             // pictureBox1
@@ -84,7 +87,8 @@
             button1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             button1.BackColor = Color.White;
             button1.FlatStyle = FlatStyle.Flat;
-            button1.Location = new Point(783, 211);
+            button1.Location = new Point(48, 0);
+            button1.Margin = new Padding(3, 0, 0, 0);
             button1.Name = "button1";
             button1.Padding = new Padding(6, 0, 6, 6);
             button1.Size = new Size(43, 41);
@@ -93,12 +97,40 @@
             button1.UseVisualStyleBackColor = false;
             button1.Click += button1_Click;
             // 
+            // button2
+            // 
+            button2.AutoSize = true;
+            button2.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            button2.BackColor = Color.White;
+            button2.FlatStyle = FlatStyle.Flat;
+            button2.Location = new Point(0, 0);
+            button2.Margin = new Padding(0);
+            button2.Name = "button2";
+            button2.Padding = new Padding(6, 0, 6, 6);
+            button2.Size = new Size(45, 41);
+            button2.TabIndex = 4;
+            button2.Text = "m";
+            button2.UseVisualStyleBackColor = false;
+            button2.Click += button2_Click;
+            // 
+            // flowLayoutPanel1
+            // 
+            flowLayoutPanel1.AutoSize = true;
+            flowLayoutPanel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            flowLayoutPanel1.Controls.Add(button2);
+            flowLayoutPanel1.Controls.Add(button1);
+            flowLayoutPanel1.Location = new Point(735, 211);
+            flowLayoutPanel1.Name = "flowLayoutPanel1";
+            flowLayoutPanel1.Size = new Size(91, 41);
+            flowLayoutPanel1.TabIndex = 5;
+            flowLayoutPanel1.SizeChanged += flowLayoutPanel1_SizeChanged;
+            // 
             // frmMoose
             // 
             AutoScaleMode = AutoScaleMode.None;
             BackColor = Color.Lime;
             ClientSize = new Size(826, 495);
-            Controls.Add(button1);
+            Controls.Add(flowLayoutPanel1);
             Controls.Add(label2);
             Controls.Add(label1);
             Controls.Add(pictureBox1);
@@ -112,6 +144,8 @@
             TopMost = true;
             TransparencyKey = Color.Lime;
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
+            flowLayoutPanel1.ResumeLayout(false);
+            flowLayoutPanel1.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -122,5 +156,7 @@
         private Label label2;
         private Label label1;
         private Button button1;
+        private Button button2;
+        private FlowLayoutPanel flowLayoutPanel1;
     }
 }

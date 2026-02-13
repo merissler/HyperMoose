@@ -8,15 +8,18 @@ namespace HyperMoose.Forms;
 public partial class frmMoose : Form
 {
     private readonly MooseTranslator _translator;
+    private readonly CancellationTokenSource? _cts;
     private readonly bool _scuba;
 
     private bool _translated = false;
 
-    public frmMoose(MooseTranslator translator, string sender, string message, string? font = null)
+    public frmMoose(MooseTranslator translator, string sender, string message, string? font = null, CancellationTokenSource? cts = null)
     {
         InitializeComponent();
 
         _translator = translator;
+        _cts = cts;
+
         _scuba = Process.GetProcessesByName("DesktopAquarium").Length > 0;
         pictureBox1.Image = _scuba ? Properties.Resources.moose_scuba : Properties.Resources.moose;
 
@@ -65,9 +68,20 @@ public partial class frmMoose : Form
         }
     }
 
+    private void flowLayoutPanel1_SizeChanged(object sender, EventArgs e)
+    {
+        flowLayoutPanel1.Left = Width - flowLayoutPanel1.Width;
+    }
+
     private void button1_Click(object sender, EventArgs e)
     {
         Close();
+    }
+
+    private void button2_Click(object sender, EventArgs e)
+    {
+        _cts?.Cancel();
+        button2.Visible = false;
     }
 
     private const int WM_NCLBUTTONDOWN = 0xA1;
