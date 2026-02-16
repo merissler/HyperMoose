@@ -14,7 +14,8 @@ internal static partial class Program
     public const int PORT = 7777;
 
 #if DEBUG
-    [LibraryImport("kernel32.dll")] [return: MarshalAs(UnmanagedType.Bool)]
+    [LibraryImport("kernel32.dll")]
+    [return: MarshalAs(UnmanagedType.Bool)]
     private static partial bool AllocConsole();
 #endif
 
@@ -80,30 +81,48 @@ internal static partial class Program
         {
             Console.WriteLine($"Opening main form...");
 
-            if (_form is null)
+            _ui.BeginInvoke(() =>
             {
-                _ui.BeginInvoke(() =>
+                if (_form is null)
                 {
                     _form = new Form1();
-                    _form.ShowDialog();
-                    _form.Dispose();
-                    _form = null;
-                });
-            }
-            else _form.Activate();
+                    _form.Show();
+                    _form.FormClosed += (s, e) =>
+                    {
+                        _form.Dispose();
+                        _form = null;
+                    };
+                }
+                else
+                {
+                    _form.Show();
+                    _form.WindowState = FormWindowState.Normal;
+                    _form.BringToFront();
+                    _form.Activate();
+                }
+            });
         }
 
         private void ExitApplication(object? sender, EventArgs e)
         {
-            Console.WriteLine($"Exiting application...");
+            _ui.BeginInvoke(() =>
+            {
+                Console.WriteLine($"Exiting application...");
 
-            _appCTS.Cancel();
-            _listener.Stop();
+                _appCTS.Cancel();
+                _listener.Stop();
 
-            _notifyIcon.Visible = false;
-            _notifyIcon.Dispose();
+                _notifyIcon.Visible = false;
+                _notifyIcon.Dispose();
 
-            Application.Exit();
+                Application.Exit();
+            });
+        }
+
+        private void OpenReply(string recipient)
+        {
+            OpenMainForm(null, EventArgs.Empty);
+            _ui.BeginInvoke(() => _form?.SelectRecipient(recipient));
         }
 
         private async Task ListenAsync(CancellationToken cancellationToken)
@@ -134,8 +153,10 @@ internal static partial class Program
 
                     _ui.BeginInvoke(() =>
                     {
-                        var frm = new frmMoose(_translator, sender, mm.MooseCode, mm.FontFamily, _soundCTS);
+                        var frm = new frmMoose(sender, mm.MooseCode, mm.FontFamily);
                         frm.Show();
+                        frm.Mute += (s, e) => _soundCTS?.Cancel();
+                        frm.Reply += (s, e) => OpenReply(sender);
                         frm.FormClosed += (s, e) => frm.Dispose();
                     });
                     _ = PlayMooseSoundsAsync(mm.MooseCode);
@@ -183,7 +204,6 @@ internal static partial class Program
 
                             if (stream.CanSeek) stream.Position = 0;
                             using var sound = new SoundPlayer(stream);
-                            using var registration = cancellationToken.Register(sound.Stop);
 
                             await Task.Run(sound.PlaySync, cancellationToken);
                         }

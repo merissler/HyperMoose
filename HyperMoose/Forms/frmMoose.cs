@@ -7,18 +7,24 @@ namespace HyperMoose.Forms;
 
 public partial class frmMoose : Form
 {
-    private readonly MooseTranslator _translator;
-    private readonly CancellationTokenSource? _cts;
-    private readonly bool _scuba;
+    private const int WM_NCLBUTTONDOWN = 0xA1;
+    private const int HTCAPTION = 0x2;
 
+    public event EventHandler? Mute;
+    public event EventHandler? Reply;
+
+    private readonly bool _scuba;
     private bool _translated = false;
 
-    public frmMoose(MooseTranslator translator, string sender, string message, string? font = null, CancellationTokenSource? cts = null)
+    [DllImport("user32.dll")]
+    private static extern bool ReleaseCapture();
+
+    [DllImport("user32.dll")]
+    private static extern int SendMessage(IntPtr hWnd, int msg, int wParam, int lParam);
+
+    public frmMoose(string sender, string message, string? font = null)
     {
         InitializeComponent();
-
-        _translator = translator;
-        _cts = cts;
 
         _scuba = Process.GetProcessesByName("DesktopAquarium").Length > 0;
         pictureBox1.Image = _scuba ? Properties.Resources.moose_scuba : Properties.Resources.moose;
@@ -63,7 +69,7 @@ public partial class frmMoose : Form
     {
         if (!_translated)
         {
-            label1.Text = _translator.Decode(label1.Text);
+            label1.Text = new MooseTranslator().Decode(label1.Text);
             _translated = true;
         }
     }
@@ -75,21 +81,28 @@ public partial class frmMoose : Form
 
     private void button1_Click(object sender, EventArgs e)
     {
+        if (Mute is EventHandler handler)
+        {
+            handler(this, EventArgs.Empty);
+        }
         Close();
     }
 
     private void button2_Click(object sender, EventArgs e)
     {
-        _cts?.Cancel();
-        button2.Visible = false;
+        if (Mute is EventHandler handler)
+        {
+            handler(this, EventArgs.Empty);
+        }
+        button2.Hide();
     }
 
-    private const int WM_NCLBUTTONDOWN = 0xA1;
-    private const int HTCAPTION = 0x2;
-
-    [DllImport("user32.dll")]
-    private static extern bool ReleaseCapture();
-
-    [DllImport("user32.dll")]
-    private static extern int SendMessage(IntPtr hWnd, int msg, int wParam, int lParam);
+    private void button3_Click(object sender, EventArgs e)
+    {
+        if (Reply is EventHandler handler)
+        {
+            handler(this, EventArgs.Empty);
+        }
+        button3.Hide();
+    }
 }

@@ -35,6 +35,7 @@
             button1 = new Button();
             button2 = new Button();
             flowLayoutPanel1 = new FlowLayoutPanel();
+            button3 = new Button();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             flowLayoutPanel1.SuspendLayout();
             SuspendLayout();
@@ -87,7 +88,7 @@
             button1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             button1.BackColor = Color.White;
             button1.FlatStyle = FlatStyle.Flat;
-            button1.Location = new Point(48, 0);
+            button1.Location = new Point(93, 0);
             button1.Margin = new Padding(3, 0, 0, 0);
             button1.Name = "button1";
             button1.Padding = new Padding(6, 0, 6, 6);
@@ -118,12 +119,29 @@
             flowLayoutPanel1.AutoSize = true;
             flowLayoutPanel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             flowLayoutPanel1.Controls.Add(button2);
+            flowLayoutPanel1.Controls.Add(button3);
             flowLayoutPanel1.Controls.Add(button1);
-            flowLayoutPanel1.Location = new Point(735, 211);
+            flowLayoutPanel1.Location = new Point(690, 211);
             flowLayoutPanel1.Name = "flowLayoutPanel1";
-            flowLayoutPanel1.Size = new Size(91, 41);
+            flowLayoutPanel1.Size = new Size(136, 41);
             flowLayoutPanel1.TabIndex = 5;
             flowLayoutPanel1.SizeChanged += flowLayoutPanel1_SizeChanged;
+            // 
+            // button3
+            // 
+            button3.AutoSize = true;
+            button3.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            button3.BackColor = Color.White;
+            button3.FlatStyle = FlatStyle.Flat;
+            button3.Location = new Point(48, 0);
+            button3.Margin = new Padding(3, 0, 0, 0);
+            button3.Name = "button3";
+            button3.Padding = new Padding(6, 0, 6, 6);
+            button3.Size = new Size(42, 41);
+            button3.TabIndex = 5;
+            button3.Text = "r";
+            button3.UseVisualStyleBackColor = false;
+            button3.Click += button3_Click;
             // 
             // frmMoose
             // 
@@ -158,5 +176,6 @@
         private Button button1;
         private Button button2;
         private FlowLayoutPanel flowLayoutPanel1;
+        private Button button3;
     }
 }

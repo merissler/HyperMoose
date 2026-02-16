@@ -1,6 +1,5 @@
 using System.Diagnostics;
 using System.Drawing.Text;
-using System.Xml.Linq;
 using HyperMoose.Models;
 using HyperMoose.Utilities;
 using MooseCode;
@@ -34,6 +33,16 @@ public partial class Form1 : Form
             comboBox1.Items.Add(font);
         }
         comboBox1.SelectedItem = Font.Name;
+    }
+
+    public void SelectRecipient(string name)
+    {
+        if (listBox1.DataSource is Herd[] groups)
+        {
+            listBox1.SelectedIndex = Array.FindIndex(groups, herd => herd.Name == name);
+            textBox1.Focus();
+            textBox1.SelectAll();
+        }
     }
 
     private void Form1_Activated(object sender, EventArgs e)
