@@ -105,4 +105,13 @@ public partial class frmMoose : Form
         }
         button3.Hide();
     }
+
+    protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+    {
+        if (keyData == (Keys.Alt | Keys.F4))
+        {
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
+        else return true;
+    }
 }
